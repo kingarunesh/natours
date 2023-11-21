@@ -80,8 +80,6 @@ exports.createTour = (req, res) => {
 
 //     update tour
 exports.updateTour = (req, res) => {
-    const id = Number(req.params.id);
-
     // res.status(205).json({
     res.status(200).json({
         status: "Success",
