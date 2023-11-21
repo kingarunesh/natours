@@ -1,21 +1,43 @@
 const fs = require("fs");
 
 const express = require("express");
+const morgan = require("morgan");
 
 //SECTION :     coding start
 
 const app = express();
+
+//NOTE :        middleware
+
+//  morgan
+app.use(morgan("dev"));
+
+//  for request json body
 app.use(express.json());
+
+//  simple middleware
+app.use((req, res, next) => {
+    console.log("Middleware 👋");
+
+    next();
+});
+
+app.use((req, res, next) => {
+    req.requestAt = new Date().toLocaleString();
+
+    next();
+});
 
 //NOTE :    get json data from json file
 const tours = JSON.parse(fs.readFileSync(`${__dirname}/dev-data/data/tours-simple.json`));
 
-//NOTE :    routes
+//NOTE :    routes handler
 
 //!     get all tours
 const getAllTours = (req, res) => {
     res.status(200).json({
         status: "Success",
+        requestAt: req.requestAt,
         length: tours.length,
         data: {
             tours,
@@ -115,6 +137,7 @@ const deleteTour = (req, res) => {
     });
 };
 
+//NOTE :    routes
 // app.get("/api/v1/tours", getAllTours);
 // app.post("/api/v1/tours", createTour);
 // app.get("/api/v1/tours/:id", getTour);
