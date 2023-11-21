@@ -1,8 +1,22 @@
+const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 
 dotenv.config({ path: "./config.env" });
 
 const app = require("./app");
+
+//NOTE :        database connection
+const DB = process.env.DATABASE.replace(
+    "<PASSWORD>",
+    process.env.DATABASE_PASSWORD,
+);
+
+mongoose
+    .connect(DB)
+    .then((con) => {
+        console.log("database started...");
+    })
+    .catch((error) => console.log(error));
 
 //NOTE :        Envirment Variables
 // console.log(app.get("env"));
@@ -12,8 +26,8 @@ const app = require("./app");
 /* eslint-disable */
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-  console.log();
-  console.log("-----------------------------------------");
-  console.log();
-  console.log(`Server started on port ${PORT}...`);
+    console.log();
+    console.log("-----------------------------------------");
+    console.log();
+    console.log(`Server started on port ${PORT}...`);
 });
