@@ -2,7 +2,34 @@ const fs = require("fs");
 
 //      read file
 const tours = JSON.parse(fs.readFileSync(`${__dirname}/../dev-data/data/tours-simple.json`));
-// const tours = JSON.parse(fs.readFileSync(`${__dirname}/../`));
+
+//NOTE     middleware
+
+//      check id
+exports.checkID = (req, res, next, value) => {
+    if (Number(req.params.id) > tours.length - 1) {
+        return res.status(404).json({
+            status: "Fail",
+            message: "Invalid Tour ID",
+        });
+    }
+
+    next();
+};
+
+//      check body
+exports.checkBody = (req, res, next) => {
+    if (!req.body.name || !req.body.price) {
+        return res.status(400).json({
+            status: "Fail",
+            message: "Content Missing",
+        });
+    }
+
+    next();
+};
+
+//NOTE :        route handler
 
 //     get all tours
 exports.getAllTours = (req, res) => {
@@ -20,22 +47,7 @@ exports.getAllTours = (req, res) => {
 exports.getTour = (req, res) => {
     const id = Number(req.params.id);
 
-    //%     not working
-    // if (id > tours.length) {
-    //     return res.status(404).json({
-    //         status: "Fail",
-    //         message: "Invalid Tour ID",
-    //     });
-    // }
-
     const tour = tours.find((tour) => tour.id === id);
-
-    if (!tour) {
-        return res.status(404).json({
-            status: "Fail",
-            message: "Invalid Tour ID",
-        });
-    }
 
     res.status(200).json({
         status: "Success",
@@ -64,13 +76,6 @@ exports.createTour = (req, res) => {
 exports.updateTour = (req, res) => {
     const id = Number(req.params.id);
 
-    if (id > tours.length - 1) {
-        return res.status(404).json({
-            status: "Fail",
-            message: "Invalid Tour ID",
-        });
-    }
-
     // res.status(205).json({
     res.status(200).json({
         status: "Success",
@@ -90,14 +95,6 @@ exports.deleteTour = (req, res) => {
 
     //      remove delete tour from tours array
     const newTours = tours.filter((tour) => tour !== deleteTour);
-
-    //      if id is invalid return
-    if (!deleteTour) {
-        return res.status(404).json({
-            status: "fail",
-            message: "Invalid Tour ID",
-        });
-    }
 
     //      update new tours
     fs.writeFile(`${__dirname}/dev-data/data/tours-simple.json`, JSON.stringify(newTours), (error) => {

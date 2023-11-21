@@ -29,6 +29,9 @@ app.use((req, res, next) => {
     next();
 });
 
+//!     static files
+app.use(express.static(`${__dirname}/public`));
+
 //NOTE :    routes
 
 app.use("/api/v1/tours", tourRouter);
