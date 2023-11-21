@@ -10,8 +10,12 @@ const app = express();
 
 //NOTE :        middleware
 
-//  morgan
-app.use(morgan("dev"));
+// console.log(process.env.NODE_ENV);
+
+if (process.env.NODE_ENV === "development") {
+    //  morgan
+    app.use(morgan("dev"));
+}
 
 //  for request json body
 app.use(express.json());
