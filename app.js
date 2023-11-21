@@ -137,16 +137,53 @@ const deleteTour = (req, res) => {
     });
 };
 
+//!     get all users
+const getAllUsers = (req, res) => {
+    res.status(500).json({
+        status: "Undefiend",
+        message: "This route not defiend yet 💥",
+    });
+};
+
+//!     get user
+const getUser = (req, res) => {
+    res.status(500).json({
+        status: "Undefiend",
+        message: "This route not defiend yet 💥",
+    });
+};
+
+//!     create user
+const createUser = (req, res) => {
+    res.status(500).json({
+        status: "Undefiend",
+        message: "This route not defiend yet 💥",
+    });
+};
+
+//!     update user
+const updateUser = (req, res) => {
+    res.status(500).json({
+        status: "Undefiend",
+        message: "This route not defiend yet 💥",
+    });
+};
+
+//!     delete user
+const deleteUser = (req, res) => {
+    res.status(500).json({
+        status: "Undefiend",
+        message: "This route not defiend yet 💥",
+    });
+};
+
 //NOTE :    routes
-// app.get("/api/v1/tours", getAllTours);
-// app.post("/api/v1/tours", createTour);
-// app.get("/api/v1/tours/:id", getTour);
-// app.patch("/api/v1/tours/:id", updateTour);
-// app.delete("/api/v1/tours/:id", deleteTour);
 
 app.route("/api/v1/tours").get(getAllTours).post(createTour);
-
 app.route("/api/v1/tours/:id").get(getTour).patch(updateTour).delete(deleteTour);
+
+app.route("/api/v1/users").get(getAllUsers).post(createUser);
+app.route("/api/v1/users/:id").get(getUser).patch(updateUser).delete(deleteUser);
 
 //NOTE :    server start
 const PORT = 5000;
