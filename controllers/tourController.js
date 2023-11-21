@@ -1,7 +1,9 @@
 const fs = require("fs");
 
 //      read file
-const tours = JSON.parse(fs.readFileSync(`${__dirname}/../dev-data/data/tours-simple.json`));
+const tours = JSON.parse(
+    fs.readFileSync(`${__dirname}/../dev-data/data/tours-simple.json`),
+);
 
 //NOTE     middleware
 
@@ -47,7 +49,7 @@ exports.getAllTours = (req, res) => {
 exports.getTour = (req, res) => {
     const id = Number(req.params.id);
 
-    const tour = tours.find((tour) => tour.id === id);
+    const tour = tours.find((tourItem) => tourItem.id === id);
 
     res.status(200).json({
         status: "Success",
@@ -62,14 +64,18 @@ exports.createTour = (req, res) => {
     const newTour = { id: tours.length, ...req.body };
     tours.push(newTour);
 
-    fs.writeFile(`${__dirname}/dev-data/data/tours-simple.json`, JSON.stringify(tours), (error) => {
-        res.status(201).json({
-            status: "Success",
-            data: {
-                tour: newTour,
-            },
-        });
-    });
+    fs.writeFile(
+        `${__dirname}/dev-data/data/tours-simple.json`,
+        JSON.stringify(tours),
+        (error) => {
+            res.status(201).json({
+                status: "Success",
+                data: {
+                    tour: newTour,
+                },
+            });
+        },
+    );
 };
 
 //     update tour
@@ -97,10 +103,14 @@ exports.deleteTour = (req, res) => {
     const newTours = tours.filter((tour) => tour !== deleteTour);
 
     //      update new tours
-    fs.writeFile(`${__dirname}/dev-data/data/tours-simple.json`, JSON.stringify(newTours), (error) => {
-        res.status(204).json({
-            status: "success",
-            message: null,
-        });
-    });
+    fs.writeFile(
+        `${__dirname}/dev-data/data/tours-simple.json`,
+        JSON.stringify(newTours),
+        (error) => {
+            res.status(204).json({
+                status: "success",
+                message: null,
+            });
+        },
+    );
 };
