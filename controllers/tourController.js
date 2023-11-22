@@ -9,6 +9,14 @@ exports.aliasTopTours = (req, res, next) => {
     next();
 };
 
+exports.top5ByRatingsAverage = (req, res, next) => {
+    req.query.limit = 5;
+    req.query.sort = "-ratingsAverage";
+    req.query.fields = "name,price,duration,ratingsAverage";
+
+    next();
+};
+
 //SECTION :     get all tours
 exports.getAllTours = async (req, res) => {
     try {
