@@ -17,7 +17,8 @@ exports.getAllTours = async (req, res) => {
     } catch (error) {
         res.status(404).json({
             status: "fail",
-            message: "Fail to fetch tours data",
+            // message: "Fail to fetch tours data",
+            message: error,
         });
     }
 };
@@ -36,7 +37,8 @@ exports.getTour = async (req, res) => {
     } catch (error) {
         res.status(404).json({
             status: "fail",
-            message: "Fail to fetch tour data",
+            // message: "Fail to fetch tour data",
+            message: error,
         });
     }
 };
@@ -55,7 +57,8 @@ exports.createTour = async (req, res) => {
     } catch (error) {
         res.status(400).json({
             status: "Fail",
-            message: "Invalid Data Sent 💥",
+            // message: "Invalid Data Sent 💥",
+            message: error,
         });
     }
 };
@@ -77,7 +80,8 @@ exports.updateTour = async (req, res) => {
     } catch (error) {
         res.status(404).json({
             status: "fail",
-            message: "Fail to update, please check id",
+            // message: "Fail to update, please check id",
+            message: error,
         });
     }
 };
@@ -94,7 +98,8 @@ exports.deleteTour = async (req, res) => {
     } catch (error) {
         res.status(404).json({
             status: "Fail",
-            message: "Fail to delete document, please check id",
+            // message: "Fail to delete document, please check id",
+            message: error,
         });
     }
 };
