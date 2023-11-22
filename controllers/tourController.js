@@ -3,10 +3,10 @@ const Tour = require("../models/tourModel");
 //SECTION :     get all tours
 exports.getAllTours = async (req, res) => {
     try {
-        //&     get all tours
+        //NOTE     get all tours
         // const tours = await Tour.find();
 
-        //&     direct filtering
+        //NOTE     direct filtering
         // const tours = await Tour.find({ duration: 5, difficulty: "easy" });
 
         // const tours = await Tour.find()
@@ -15,10 +15,10 @@ exports.getAllTours = async (req, res) => {
         //     .where("difficulty")
         //     .equals("easy");
 
-        //&     filter object from url
+        //NOTE     filter object from url
         // const tours = await Tour.find(req.query);
 
-        //&     filtering tours and exclude others type
+        //NOTE     filtering tours and exclude others type
         // const tours = await Tour.find(req.query);
 
         const queryObj = { ...req.query };
@@ -28,7 +28,7 @@ exports.getAllTours = async (req, res) => {
         //  for simple filtering
         // const query = Tour.find(queryObj);
 
-        //&     adv filtering (gte | gt | lte | lt)
+        //NOTE     adv filtering (gte | gt | lte | lt)
         //  i can use directly but it is not user friendly
         // 127.0.0.1:5000/api/v1/tours?duration[$gte]=5&difficulty=easy
 
@@ -39,10 +39,22 @@ exports.getAllTours = async (req, res) => {
         );
 
         //  conditionally filtering like gte, gt, lte, lt
-        const query = Tour.find(JSON.parse(queryStr));
+        let query = Tour.find(JSON.parse(queryStr));
+
+        //NOTE :        sort
+        if (req.query.sort) {
+            const sortBy = req.query.sort.split(",").join(" ");
+
+            query = query.sort(sortBy);
+        } else {
+            query = query.sort("-createdAt");
+        }
 
         const tours = await query;
 
+        console.log(req.query);
+
+        //NOTE     send response to user
         res.status(200).json({
             status: "success",
             length: tours.length,
