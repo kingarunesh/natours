@@ -13,7 +13,7 @@ const app = express();
 // console.log(process.env.NODE_ENV);
 
 if (process.env.NODE_ENV === "development") {
-  app.use(morgan("dev"));
+    app.use(morgan("dev"));
 }
 
 //  for request json body
@@ -27,9 +27,9 @@ app.use(express.json());
 // });
 
 app.use((req, res, next) => {
-  req.requestAt = new Date().toLocaleString();
+    req.requestAt = new Date().toLocaleString();
 
-  next();
+    next();
 });
 
 //!     static files

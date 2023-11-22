@@ -1,5 +1,14 @@
 const Tour = require("../models/tourModel");
 
+//SECTION :     middleware
+exports.aliasTopTours = (req, res, next) => {
+    req.query.sort = "price,-ratingsAverage";
+    req.query.limit = "5";
+    req.query.fields = "name,price,ratingsAverage,summary,difficulty";
+
+    next();
+};
+
 //SECTION :     get all tours
 exports.getAllTours = async (req, res) => {
     try {
@@ -78,7 +87,7 @@ exports.getAllTours = async (req, res) => {
                 throw new Error("Page or Limit is invalid 💥");
         }
 
-        console.log(req.query);
+        // console.log(req.query);
 
         //NOTE :    result query
         const tours = await query;
