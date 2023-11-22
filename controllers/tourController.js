@@ -1,8 +1,6 @@
 const Tour = require("../models/tourModel");
 
-//SECTION :        route handler
-
-//!     get all tours
+//SECTION :     get all tours
 exports.getAllTours = async (req, res) => {
     try {
         //&     get all tours
@@ -27,7 +25,21 @@ exports.getAllTours = async (req, res) => {
         const excludesFields = ["page", "limit", "sort", "fields"];
         excludesFields.forEach((el) => delete queryObj[el]);
 
-        const query = Tour.find(queryObj);
+        //  for simple filtering
+        // const query = Tour.find(queryObj);
+
+        //&     adv filtering (gte | gt | lte | lt)
+        //  i can use directly but it is not user friendly
+        // 127.0.0.1:5000/api/v1/tours?duration[$gte]=5&difficulty=easy
+
+        let queryStr = JSON.stringify(queryObj);
+        queryStr = queryStr.replace(
+            /\b(gte|gt|lte|lt)\b/g,
+            (match) => `$${match}`,
+        );
+
+        //  conditionally filtering like gte, gt, lte, lt
+        const query = Tour.find(JSON.parse(queryStr));
 
         const tours = await query;
 
@@ -46,7 +58,7 @@ exports.getAllTours = async (req, res) => {
     }
 };
 
-//!     get single tour by tour id
+//SECTION :     get single tour by tour id
 exports.getTour = async (req, res) => {
     try {
         const tour = await Tour.findById(req.params.id);
@@ -66,7 +78,7 @@ exports.getTour = async (req, res) => {
     }
 };
 
-//!     create new tour
+//SECTION :     create new tour
 exports.createTour = async (req, res) => {
     try {
         const newTour = await Tour.create(req.body);
@@ -86,7 +98,7 @@ exports.createTour = async (req, res) => {
     }
 };
 
-//!     update tour
+//SECTION :     update tour
 exports.updateTour = async (req, res) => {
     try {
         const tour = await Tour.findByIdAndUpdate(req.params.id, req.body, {
@@ -109,7 +121,7 @@ exports.updateTour = async (req, res) => {
     }
 };
 
-//!     delete tour
+//SECTION :     delete tour
 exports.deleteTour = async (req, res) => {
     try {
         await Tour.findByIdAndDelete(req.params.id);
