@@ -1,11 +1,35 @@
 const Tour = require("../models/tourModel");
 
-//NOTE :        route handler
+//SECTION :        route handler
 
 //!     get all tours
 exports.getAllTours = async (req, res) => {
     try {
-        const tours = await Tour.find();
+        //&     get all tours
+        // const tours = await Tour.find();
+
+        //&     direct filtering
+        // const tours = await Tour.find({ duration: 5, difficulty: "easy" });
+
+        // const tours = await Tour.find()
+        //     .where("duration")
+        //     .equals(5)
+        //     .where("difficulty")
+        //     .equals("easy");
+
+        //&     filter object from url
+        // const tours = await Tour.find(req.query);
+
+        //&     filtering tours and exclude others type
+        // const tours = await Tour.find(req.query);
+
+        const queryObj = { ...req.query };
+        const excludesFields = ["page", "limit", "sort", "fields"];
+        excludesFields.forEach((el) => delete queryObj[el]);
+
+        const query = Tour.find(queryObj);
+
+        const tours = await query;
 
         res.status(200).json({
             status: "success",
@@ -17,7 +41,6 @@ exports.getAllTours = async (req, res) => {
     } catch (error) {
         res.status(404).json({
             status: "fail",
-            // message: "Fail to fetch tours data",
             message: error,
         });
     }
