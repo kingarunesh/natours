@@ -70,6 +70,11 @@ const tourSchema = new mongoose.Schema(
         },
 
         startDates: [Date],
+
+        secretTour: {
+            type: Boolean,
+            default: false,
+        },
     },
     {
         toJSON: { virtuals: true },
@@ -108,7 +113,30 @@ tourSchema.pre("save", function (next) {
 });
 
 tourSchema.post("save", function (document, next) {
-    console.log(document);
+    console.log("hello");
+
+    next();
+});
+
+//SECTION :     query middleware
+//!     it will for find, findById, findByIdAndUpdate, findByIdAndDelete and more related find...
+
+//!      "find" here not display on getAllTours but it will display in others like findById and more related find
+// tourSchema.pre("find", function (next) {
+
+//!     /^find/ here not display for all types of find like find(), findById() and more like that
+tourSchema.pre(/^find/, function (next) {
+    this.find({ secretTour: { $ne: true } });
+
+    this.start = new Date();
+
+    next();
+});
+
+tourSchema.post("find", function (document, next) {
+    // console.log(document);
+
+    console.log(`Query took ${new Date() - this.start} milliseconds`);
 
     next();
 });
