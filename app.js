@@ -38,8 +38,15 @@ app.use(express.static(`${__dirname}/public`));
 //NOTE :    routes
 
 app.use("/api/v1/tours", tourRouter);
-
 app.use("/api/v1/users", userRouter);
+
+//SECTION :     routes handle which is not discribe
+app.all("*", (req, res, next) => {
+    res.status(404).json({
+        status: "Fail",
+        message: `${req.originalUrl} is not defined 💥`,
+    });
+});
 
 //NOTE :    export app for server
 module.exports = app;
