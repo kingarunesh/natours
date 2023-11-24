@@ -42,9 +42,25 @@ app.use("/api/v1/users", userRouter);
 
 //SECTION :     routes handle which is not discribe
 app.all("*", (req, res, next) => {
-    res.status(404).json({
-        status: "Fail",
-        message: `${req.originalUrl} is not defined 💥`,
+    // res.status(404).json({
+    //     status: "Fail",
+    //     message: `${req.originalUrl} is not defined 💥`,
+    // });
+
+    const error = new Error(`This url '${req.originalUrl}' is not defined 💥`);
+    error.status = "fail";
+    error.statusCode = 404;
+
+    next(error);
+});
+
+app.use((error, req, res, next) => {
+    error.statusCode = error.statusCode || 500;
+    error.status = error.status || "error";
+
+    res.status(error.statusCode).json({
+        status: error.status,
+        message: error.message,
     });
 });
 
