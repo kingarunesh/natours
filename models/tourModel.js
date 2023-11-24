@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
+const slugify = require("slugify");
 
-//      tour schema
+//SECTION :      tour schema
 const tourSchema = new mongoose.Schema(
     {
         name: {
@@ -9,6 +10,8 @@ const tourSchema = new mongoose.Schema(
             unique: true,
             trim: true,
         },
+
+        slug: String,
 
         duration: {
             type: Number,
@@ -74,7 +77,7 @@ const tourSchema = new mongoose.Schema(
     },
 );
 
-//NOTE :    virtual will not work in query because virtual datas will not store in database
+//SECTION :    virtual will not work in query because virtual datas will not store in database
 tourSchema.virtual("durationWeeks").get(function () {
     return this.duration / 7;
 });
@@ -91,6 +94,26 @@ tourSchema.virtual("durationInDaysAndWeek").get(function () {
     return `${days} Days`;
 });
 
+//SECTION :     document middleware ( save() & create() )
+//!     runs before .save() and .create() only [ it will run before save document in database ]
+
+//!     in pre have this keyword for access document from tourSchema || post have document to access document
+
+tourSchema.pre("save", function (next) {
+    //  in pre save we have this
+    // console.log(this)
+    this.slug = slugify(this.name, { lower: true });
+
+    next();
+});
+
+tourSchema.post("save", function (document, next) {
+    console.log(document);
+
+    next();
+});
+
+//SECTION :     tour collections
 const Tour = mongoose.model("Tour", tourSchema);
 
 module.exports = Tour;

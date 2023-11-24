@@ -18,5 +18,6 @@
             "warn",
             { "argsIgnorePattern": "req|res|next|value|error" }
         ]
-    }
+    },
+    "import/no-extraneous-dependencies": ["error", { "devDependencies": true }]
 }
