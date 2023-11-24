@@ -141,6 +141,14 @@ tourSchema.post("find", function (document, next) {
     next();
 });
 
+//SECTION :     aggregate middleware
+tourSchema.pre("aggregate", function (next) {
+    //  add seceretTour to match
+    this.pipeline().unshift({ $match: { secretTour: { $ne: true } } });
+
+    next();
+});
+
 //SECTION :     tour collections
 const Tour = mongoose.model("Tour", tourSchema);
 
