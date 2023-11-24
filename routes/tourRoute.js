@@ -9,6 +9,7 @@ const {
     aliasTopTours,
     top5ByRatingsAverage,
     getTourStats,
+    monthlyPlan,
 } = require("../controllers/tourController");
 
 //SECTION :     routers
@@ -19,6 +20,8 @@ const router = express.Router();
 router.route("/top-5-cheap").get(aliasTopTours, getAllTours);
 
 router.route("/tour-stats").get(getTourStats);
+
+router.route("/monthly-plan/:year").get(monthlyPlan);
 
 router.route("/top-5-by-ratingsAverage").get(top5ByRatingsAverage, getAllTours);
 
