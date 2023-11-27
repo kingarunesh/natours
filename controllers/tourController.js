@@ -34,7 +34,7 @@ exports.getAllTours = catchAsync(async (req, res, next) => {
     //NOTE     send response to user
     res.status(200).json({
         status: "success",
-        length: tours.length,
+        lengths: tours.length,
         data: {
             tours,
         },
