@@ -32,6 +32,8 @@ app.use(express.json());
 app.use((req, res, next) => {
     req.requestAt = new Date().toLocaleString();
 
+    console.log(hello);
+
     next();
 });
 
