@@ -39,6 +39,19 @@ const userSchema = new mongoose.Schema({
     },
 });
 
+userSchema.pre("save", async function (next) {
+    //!     run fun if password was modifed
+    if (!this.isModified("password")) return next();
+
+    //!     has the password
+    this.password = await bcrypt.hash(this.password, 10);
+
+    //!     remove confrim password from database
+    this.passwordConfirm = undefined;
+
+    next();
+});
+
 const User = mongoose.model("User", userSchema);
 
 module.exports = User;
