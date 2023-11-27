@@ -47,10 +47,11 @@ module.exports = (error, req, res, next) => {
     error.statusCode = error.statusCode || 500;
     error.status = error.status || "error";
 
-    if (process.env.NODE_DEV === "development") {
+    if (process.env.NODE_ENV === "development") {
         sendErrorDev(error, res);
-    } else if (process.env.NODE_DEV === "production") {
-        let newError = { ...error };
+    } else if (process.env.NODE_ENV === "production") {
+        // let newError = { ...error };
+        let newError = Object.create(err);
 
         if (newError.name === "CastError") {
             newError = handleCastErrorDB(newError);
