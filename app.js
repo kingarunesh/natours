@@ -35,8 +35,6 @@ app.use(express.static(`${__dirname}/public`));
 app.use((req, res, next) => {
     req.requestAt = new Date().toISOString();
 
-    console.log(hello);
-
     next();
 });
 

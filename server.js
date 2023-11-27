@@ -10,7 +10,6 @@ process.on("uncaughtException", (error) => {
 });
 
 dotenv.config({ path: "./config.env" });
-
 const app = require("./app");
 
 //NOTE :        database connection
