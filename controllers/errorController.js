@@ -50,20 +50,20 @@ module.exports = (error, req, res, next) => {
     if (process.env.NODE_DEV === "development") {
         sendErrorDev(error, res);
     } else if (process.env.NODE_DEV === "production") {
-        const castError = { ...error };
+        const newError = { ...error };
 
-        if (castError.name === "CastError") {
-            castError = handleCastErrorDB(castError);
+        if (newError.name === "CastError") {
+            newError = handleCastErrorDB(newError);
         }
 
-        if (castError.code === 11000) {
-            castError = handleDuplicateFieldsDB(castError);
+        if (newError.code === 11000) {
+            newError = handleDuplicateFieldsDB(newError);
         }
 
-        if (castError.name === "ValidationError") {
-            castError = handleValidationErrorDB(castError);
+        if (newError.name === "ValidationError") {
+            newError = handleValidationErrorDB(newError);
         }
 
-        sendErrorProd(castError, res);
+        sendErrorProd(newError, res);
     }
 };

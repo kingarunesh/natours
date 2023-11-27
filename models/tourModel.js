@@ -147,15 +147,15 @@ tourSchema.post("save", function (document, next) {
 tourSchema.pre(/^find/, function (next) {
     this.find({ secretTour: { $ne: true } });
 
-    this.start = new Date();
+    this.start = Date.now();
 
     next();
 });
 
-tourSchema.post("find", function (document, next) {
+tourSchema.post(/^find/, function (document, next) {
     // console.log(document);
 
-    console.log(`Query took ${new Date() - this.start} milliseconds`);
+    console.log(`Query took ${Date.now() - this.start} milliseconds`);
 
     next();
 });

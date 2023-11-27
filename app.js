@@ -22,6 +22,9 @@ if (process.env.NODE_ENV === "development") {
 //  for request json body
 app.use(express.json());
 
+//!     static files
+app.use(express.static(`${__dirname}/public`));
+
 //  simple middleware
 // app.use((req, res, next) => {
 //     console.log("Middleware 👋");
@@ -30,15 +33,12 @@ app.use(express.json());
 // });
 
 app.use((req, res, next) => {
-    req.requestAt = new Date().toLocaleString();
+    req.requestAt = new Date().toISOString();
 
     console.log(hello);
 
     next();
 });
-
-//!     static files
-app.use(express.static(`${__dirname}/public`));
 
 //NOTE :    routes
 
