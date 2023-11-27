@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const validator = require("validator");
+const bcrypt = require("bcryptjs");
 
 const userSchema = new mongoose.Schema({
     name: {
@@ -28,6 +29,13 @@ const userSchema = new mongoose.Schema({
     passwordConfirm: {
         type: String,
         required: [true, "User must have confirm password"],
+        validate: {
+            //!     this only works on save not on update
+            validator: function (currentPasswordConfirm) {
+                return this.password === currentPasswordConfirm;
+            },
+            message: "Password and passwordConfirm is not same 😔",
+        },
     },
 });
 
