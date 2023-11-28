@@ -1,18 +1,18 @@
 const User = require("./../models/userModel");
+const catchAsync = require("./../utils/catchAsync");
 
 //SECTION :     get all users
-exports.getAllUsers = async (req, res) => {
+exports.getAllUsers = catchAsync(async (req, res, next) => {
     const users = await User.find();
 
     res.status(200).json({
-        status: "tempory delete later",
-        message: "This route not defiend yet 💥",
+        status: "success",
         lengths: users.length,
         data: {
             users,
         },
     });
-};
+});
 
 //SECTION :     get user
 exports.getUser = (req, res) => {
@@ -39,11 +39,10 @@ exports.updateUser = (req, res) => {
 };
 
 //SECTION :     delete user
-exports.deleteUser = async (req, res) => {
+exports.deleteUser = catchAsync(async (req, res, next) => {
     await User.findByIdAndDelete(req.params.id);
 
     res.status(204).json({
-        status: "unOfficaly - Delete Later",
-        message: "This route not defiend yet 💥",
+        status: "success",
     });
-};
+});

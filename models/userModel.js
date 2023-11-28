@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const validator = require("validator");
 const bcrypt = require("bcryptjs");
 
+//SECTION :     user schema
 const userSchema = new mongoose.Schema({
     name: {
         type: String,
@@ -24,6 +25,7 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: [true, "User must have password"],
         minlength: 8,
+        select: false,
     },
 
     passwordConfirm: {
@@ -39,6 +41,7 @@ const userSchema = new mongoose.Schema({
     },
 });
 
+//SECTION :     incrypt user password before save in database
 userSchema.pre("save", async function (next) {
     //!     run fun if password was modifed
     if (!this.isModified("password")) return next();
@@ -51,6 +54,15 @@ userSchema.pre("save", async function (next) {
 
     next();
 });
+
+//SECTION :     instance method for all user documents
+//!     here we can't access 'this'
+userSchema.methods.correctPassword = async function (
+    candidatePassword,
+    userPassword,
+) {
+    return await bcrypt.compare(candidatePassword, userPassword);
+};
 
 const User = mongoose.model("User", userSchema);
 
