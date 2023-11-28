@@ -59,3 +59,34 @@ exports.login = catchAsync(async (req, res, next) => {
         token,
     });
 });
+
+//SECTION :     protect routes
+exports.protect = catchAsync(async (req, res, next) => {
+    let token;
+
+    // 1)   getting token and check if it's there
+    if (
+        req.headers.authorization &&
+        req.headers.authorization.startsWith("Bearer")
+    ) {
+        token = req.headers.authorization.split(" ")[1];
+        console.log(token);
+    }
+
+    if (!token) {
+        return next(
+            new AppError(
+                "You are not logged in. Please login to get access all tours",
+                401,
+            ),
+        );
+    }
+
+    // 2)   verificartion token
+
+    // 3)   check if user still exists
+
+    // 4)   check user change password after the jwt was issued
+
+    next();
+});
