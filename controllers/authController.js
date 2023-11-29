@@ -133,3 +133,19 @@ exports.restrictTo = (...roles) => {
         next();
     };
 };
+
+//!     this is also working fine and more understandble than jonas
+// exports.myRestrictTo = (req, res, next) => {
+//     const permissions = ["admin", "lead-guide"];
+
+//     if (!permissions.includes(req.user.role)) {
+//         return next(
+//             new AppError(
+//                 "You do not have permission to perform this action",
+//                 403,
+//             ),
+//         );
+//     }
+
+//     next();
+// };

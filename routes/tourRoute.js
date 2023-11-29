@@ -12,7 +12,11 @@ const {
     monthlyPlan,
 } = require("../controllers/tourController");
 
-const { protect, restrictTo } = require("./../controllers/authController");
+const {
+    protect,
+    restrictTo,
+    myRestrictTo,
+} = require("./../controllers/authController");
 
 //SECTION :     routers
 
@@ -34,5 +38,6 @@ router
     .get(getTour)
     .patch(updateTour)
     .delete(protect, restrictTo("admin", "lead-guide"), deleteTour);
+// .delete(protect, myRestrictTo, deleteTour);
 
 module.exports = router;
