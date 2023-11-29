@@ -149,3 +149,28 @@ exports.restrictTo = (...roles) => {
 
 //     next();
 // };
+
+//SECTION :     forgot password
+exports.forgotPassword = catchAsync(async (req, res, next) => {
+    // check user is giving email or not
+    if (!req.body.email) {
+        return next(new AppError("Please provide email", 400));
+    }
+
+    // 1)  get user by posted email
+    const user = await User.findOne({ email: req.body.email });
+
+    if (!user) {
+        return next(new AppError("User does not exists", 404));
+    }
+
+    // 2)  generate random token for reset password
+    const resetToken = user.createPasswordResetToken();
+
+    await user.save({ validateBeforeSave: false });
+
+    // 3)  send to user email for reset password
+});
+
+//SECTION :     reset password
+exports.resetPassword = (req, res, next) => {};
