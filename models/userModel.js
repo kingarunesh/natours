@@ -68,6 +68,15 @@ userSchema.pre("save", async function (next) {
     next();
 });
 
+//SECTION :     change - passwordChangedAt
+userSchema.pre("save", function (next) {
+    if (!this.isModified("password") || this.isNew) return next();
+
+    this.passwordChangedAt = Date.now() - 1000;
+
+    next();
+});
+
 //SECTION :     instance method for all user documents
 //!     here we can't access 'this'
 
