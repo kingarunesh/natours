@@ -3,6 +3,7 @@ const jwt = require("jsonwebtoken");
 const User = require("./../models/userModel");
 const catchAsync = require("./../utils/catchAsync");
 const AppError = require("./../utils/appError");
+const sendEmail = require("./../utils/email");
 
 //SECTION :     methods
 const tokenSign = (id) => {
@@ -170,6 +171,36 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
     await user.save({ validateBeforeSave: false });
 
     // 3)  send to user email for reset password
+    const resetURL = `${req.protocol}://${req.get(
+        "host",
+    )}/api/v1/users/reset-password/${resetToken}`;
+
+    const message = `Forgot your password? Submit patch request with your new password and passwordConfirm to: ${resetURL}.\nIf you didn't send then feel free ignore this mail`;
+
+    try {
+        await sendEmail({
+            email: user.email,
+            subject: "Your password reset token (Valid for 10 mintues)",
+            message,
+        });
+
+        res.status(200).json({
+            status: "success",
+            message: "Reset Password Token send to your email successfully",
+        });
+    } catch (error) {
+        user.passwordResetExpires = undefined;
+        user.passwordResetToken = undefined;
+
+        await user.save({ validateBeforeSave: false });
+
+        return next(
+            new AppError(
+                "There was an error on sending email, Please try again later.",
+                500,
+            ),
+        );
+    }
 });
 
 //SECTION :     reset password
