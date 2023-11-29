@@ -20,6 +20,7 @@ exports.signup = catchAsync(async (req, res, next) => {
         email: req.body.email,
         password: req.body.password,
         passwordConfirm: req.body.passwordConfirm,
+        passwordChangedAt: req.body.passwordChangedAt,
     });
 
     const token = tokenSign(newUser._id);
@@ -44,7 +45,7 @@ exports.login = catchAsync(async (req, res, next) => {
 
     // 2)    check if user email and password is correct
     const user = await User.findOne({ email }).select("+password");
-    console.log(user);
+    // console.log(user);
 
     if (!user || !(await user.correctPassword(password, user.password))) {
         return next(
@@ -88,9 +89,9 @@ exports.protect = catchAsync(async (req, res, next) => {
     // console.log(decode);
 
     // 3)   check if user still exists
-    const freshUser = await User.findById(decode.id);
+    const currentUser = await User.findById(decode.id);
 
-    if (!freshUser) {
+    if (!currentUser) {
         return next(
             new AppError(
                 "The user belonging with this token doesnot exists",
@@ -100,6 +101,18 @@ exports.protect = catchAsync(async (req, res, next) => {
     }
 
     // 4)   check user change password after the jwt was issued
+    if (currentUser.changePasswordAfter(decode.iat)) {
+        return next(
+            new AppError(
+                "User recently changed password, please login to get again new token",
+                401,
+            ),
+        );
+    }
+
+    // you can access procted routes
+
+    req.user = currentUser;
 
     next();
 });

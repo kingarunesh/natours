@@ -39,6 +39,8 @@ const userSchema = new mongoose.Schema({
             message: "Password and passwordConfirm is not same 😔",
         },
     },
+
+    passwordChangedAt: Date,
 });
 
 //SECTION :     incrypt user password before save in database
@@ -57,11 +59,31 @@ userSchema.pre("save", async function (next) {
 
 //SECTION :     instance method for all user documents
 //!     here we can't access 'this'
+
+//NOTE :    compare login password
 userSchema.methods.correctPassword = async function (
     candidatePassword,
     userPassword,
 ) {
     return await bcrypt.compare(candidatePassword, userPassword);
+};
+
+//NOTE :    check change password
+userSchema.methods.changePasswordAfter = function (JWTTimeStamp) {
+    if (this.passwordChangedAt) {
+        const changedTimeStamp = parseInt(
+            this.passwordChangedAt.getTime() / 1000,
+            10,
+        );
+
+        // console.log(changedTimeStamp);
+        // console.log(JWTTimeStamp);
+
+        return JWTTimeStamp < changedTimeStamp;
+    }
+
+    //      false meaning password is not changed
+    return false;
 };
 
 const User = mongoose.model("User", userSchema);
