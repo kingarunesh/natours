@@ -39,7 +39,7 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: [true, "User must have confirm password"],
         validate: {
-            //!     this only works on save not on update
+            //!     this only works on save and create not on update
             validator: function (currentPasswordConfirm) {
                 return this.password === currentPasswordConfirm;
             },

@@ -12,6 +12,8 @@ const {
     login,
     forgotPassword,
     resetPassword,
+    updatePassword,
+    protect,
 } = require("./../controllers/authController");
 // const authController = require("./../controllers/authController");
 
@@ -22,6 +24,7 @@ router.post("/login", login);
 
 router.post("/forgot-password", forgotPassword);
 router.patch("/reset-password/:token", resetPassword);
+router.patch("/update-password", protect, updatePassword);
 
 router.route("/").get(getAllUsers).post(createUser);
 router.route("/:id").get(getUser).patch(updateUser).delete(deleteUser);
