@@ -52,6 +52,19 @@ const userSchema = new mongoose.Schema({
     passwordResetToken: String,
 
     passwordResetExpires: Date,
+
+    active: {
+        type: Boolean,
+        default: true,
+        select: false,
+    },
+});
+
+//SECTION :     filter active user
+userSchema.pre(/^find/, function (next) {
+    this.find({ active: { $ne: false } });
+
+    next();
 });
 
 //SECTION :     incrypt user password before save in database
