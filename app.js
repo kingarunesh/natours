@@ -1,6 +1,7 @@
 const express = require("express");
 const morgan = require("morgan");
 const rateLimit = require("express-rate-limit");
+const helmet = require("helmet");
 
 const tourRouter = require("./routes/tourRoute");
 const userRouter = require("./routes/userRoute");
@@ -13,6 +14,8 @@ const globalErrorHandler = require("./controllers/errorController");
 const app = express();
 
 //NOTE :        middleware
+
+app.use(helmet());
 
 // console.log(process.env.NODE_ENV);
 
@@ -31,7 +34,7 @@ const limiter = rateLimit({
 app.use("/api", limiter);
 
 //!  for request json body
-app.use(express.json());
+app.use(express.json({ limit: "10kb" }));
 
 //!     static files
 app.use(express.static(`${__dirname}/public`));
