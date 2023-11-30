@@ -11,6 +11,7 @@ const globalErrorHandler = require("./controllers/errorController");
 
 const mongoSanitize = require("express-mongo-sanitize");
 const xss = require("xss-clean");
+const hpp = require("hpp");
 
 //SECTION :     coding start
 
@@ -46,6 +47,20 @@ app.use(mongoSanitize());
 //! Data sanitization against XSS
 // "name": "<h1>new user 1</h1>"   -   convert html code to normal
 app.use(xss());
+
+//!     phh -> Prevent parameter poplution
+app.use(
+    hpp({
+        whitelist: [
+            "duration",
+            "maxGroupSize",
+            "ratingsAverage",
+            "ratingsQuantity",
+            "price",
+            "difficulty",
+        ],
+    }),
+);
 
 //!     static files
 app.use(express.static(`${__dirname}/public`));
