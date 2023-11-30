@@ -9,6 +9,9 @@ const userRouter = require("./routes/userRoute");
 const AppError = require("./utils/appError");
 const globalErrorHandler = require("./controllers/errorController");
 
+const mongoSanitize = require("express-mongo-sanitize");
+const xss = require("xss-clean");
+
 //SECTION :     coding start
 
 const app = express();
@@ -25,7 +28,7 @@ if (process.env.NODE_ENV === "development") {
 
 //NOTE :    limit access to url
 const limiter = rateLimit({
-    max: 3,
+    max: 100,
     windowMs: 60 * 60 * 1000,
     message: "Too many request from this ip address, please try again 1 hour",
 });
@@ -35,6 +38,14 @@ app.use("/api", limiter);
 
 //!  for request json body
 app.use(express.json({ limit: "10kb" }));
+
+//! Data sanitization against NoSQL query injection
+// "email": {"$gt": ""}   -     remove special symbols
+app.use(mongoSanitize());
+
+//! Data sanitization against XSS
+// "name": "<h1>new user 1</h1>"   -   convert html code to normal
+app.use(xss());
 
 //!     static files
 app.use(express.static(`${__dirname}/public`));
