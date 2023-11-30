@@ -1,5 +1,6 @@
 const express = require("express");
 const morgan = require("morgan");
+const rateLimit = require("express-rate-limit");
 
 const tourRouter = require("./routes/tourRoute");
 const userRouter = require("./routes/userRoute");
@@ -19,7 +20,17 @@ if (process.env.NODE_ENV === "development") {
     app.use(morgan("dev"));
 }
 
-//  for request json body
+//NOTE :    limit access to url
+const limiter = rateLimit({
+    max: 3,
+    windowMs: 60 * 60 * 1000,
+    message: "Too many request from this ip address, please try again 1 hour",
+});
+
+// after /api all path have controll
+app.use("/api", limiter);
+
+//!  for request json body
 app.use(express.json());
 
 //!     static files
